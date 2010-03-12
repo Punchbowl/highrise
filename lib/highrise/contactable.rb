@@ -10,8 +10,8 @@ module Highrise
         self.location = location
       end
       
-      def to_xml
-        { :address => address, :location => location }.to_xml
+      def to_xml(options = {})
+        { 'address' => address, 'location' => location }.to_xml(options.merge(:skip_types => true))
       end
     end
 
@@ -24,8 +24,8 @@ module Highrise
         self.location = location
       end
       
-      def to_xml
-        { :number => number, :location => location }.to_xml
+      def to_xml(options = {})
+        { 'number' => number, 'location' => location }.to_xml(options.merge(:skip_types => true))
       end
     end
     
@@ -34,31 +34,31 @@ module Highrise
     end
     
     module InstanceMethods
-      def email(location = :work)
+      def email(location = 'Work')
         find_by_location(contact_data.email_addresses, location).address
       rescue
         ''
       end
 
-      def email=(email, location = :work)
+      def email=(email, location = 'Work')
         if data = find_by_location(contact_data.email_addresses, location)
           data.address = email
         else
-          contact_data.email_addresses << EmailAddress(email, location)
+          contact_data.email_addresses << EmailAddress.new(email, location)
         end
       end
       
-      def phone_number(location = :work)
+      def phone_number(location = 'Work')
         find_by_location(contact_data.phone_numbers, location).number
       rescue
         ''
       end
 
-      def phone_number=(number, location = :work)
+      def phone_number=(number, location = 'Work')
         if data = find_by_location(contact_data.phone_numbers, location)
           data.number = number
         else
-          contact_data.phone_numbers << PhoneNumber(number, location)
+          contact_data.phone_numbers << PhoneNumber.new(number, location)
         end
       end
       
